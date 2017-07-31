@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="ReverseText.widget.ReverseText" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>ReverseText</name>
+    <description>The description of this widget.</description>
+
+    <icon />
+
+    <properties>
+    <property key="micro" type="microflow" required="true">
+            <caption> On leave microflow </caption>
+            <category>Behavior</category>
+            <description>The microflow to execute on leave</description>
+            <returnType type="Boolean"/>
+        </property>
+       <property key="dataAttribute" type="attribute" required="true">
+            <caption>Tag attribute</caption>
+            <category>Data source</category>
+            <description>handles text input</description>
+            <attributeTypes>
+                <attributeType name="String" />
+            </attributeTypes>
+        </property>
+        <property key="reverseEntity" type="entity" required="true">
+        <caption>Reverse Object</caption>
+        <category>Data source</category>
+        <description>ReverseEntity</description>
+        </property>
+    </properties>
+</widget>
+

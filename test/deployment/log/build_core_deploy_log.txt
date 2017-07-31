@@ -1,0 +1,10 @@
+Buildfile: C:\Users\David\Desktop\workk\test\deployment\build_core.xml
+
+deploy:
+    [unzip] Expanding: C:\Program Files\Mendix\6.10.7\modeler\deployment.mxz into C:\Users\David\Desktop\workk\test\deployment
+
+BUILD SUCCESSFUL
+Total time: 1 second
+
+
+

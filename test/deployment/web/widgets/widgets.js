@@ -1,0 +1,1 @@
+﻿define(["ReverseText/widget/ReverseText"], {});

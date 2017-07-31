@@ -1,0 +1,22 @@
+{
+  "name": "Glocation",
+  "version": "0.1.0",
+  "description": "Glocation helps to get the current location of the user ",
+  "license": "Apache 2",
+  "author": "David and Emma",
+  "private": true,
+  "devDependencies": {
+    "@types/googlemaps": "^3.26.17"
+  },
+  "engines": {
+    "node": ">=5"
+  },
+  "generatorVersion": "2.2.3",
+  "paths": {
+    "testProjectFolder": "./test/",
+    "testProjectFileName": "Test.mpr"
+  },
+  "scripts": {
+    "build": "grunt build"
+  }
+}
