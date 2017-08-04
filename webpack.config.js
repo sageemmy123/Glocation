@@ -10,12 +10,12 @@ module.exports = {
         libraryTarget: "umd"
     },
     resolve: {
-        extensions: [ ".ts", ".js", ".json" ],
+        extensions: [ ".ts", ".js", ".json" ], // TODO remove .js and .json...supported by default
     },
     module: {
         rules: [
             { test: /\.ts$/, use: "ts-loader" },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract({
+            { test: /\.css$/, loader: ExtractTextPlugin.extract({ // not required since there is no css
                 fallback: "style-loader",
                 use: "css-loader"
             }) }
@@ -25,7 +25,7 @@ module.exports = {
     externals: [ /^mxui\/|^mendix\/|^dojo\/|^dijit\// ],
     plugins: [
         new CopyWebpackPlugin([
-            { from: "src/**/*.js" },
+            { from: "src/**/*.js" },// js can be removed
             { from: "src/**/*.xml" }
         ], {
             copyUnmodified: true

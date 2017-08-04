@@ -22,6 +22,10 @@
     "skipLibCheck": true,
     "strictNullChecks": true
   },
+   "include": [
+    "src/**/*.ts",
+    "typings/*.d.ts"
+  ],
   "exclude": [
     "dist/",
     "node_modules/"

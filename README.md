@@ -1,7 +1,7 @@
-# Geolocation widget
+# Geo location
 
 ## Description
--Glocation widget is used to capture the users current position i.e he's latitudes and longitudes and save them to the server.
+-Gets the current location of the user. widget is used to capture the users current position i.e he's latitudes and longitudes and save them to the server.
 
 ## Typical usage scenario
 -Run the widget and it will automatically capture your geo-coordinates.

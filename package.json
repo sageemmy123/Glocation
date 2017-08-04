@@ -5,8 +5,7 @@
   "license": "Apache 2",
   "author": "David and Emma",
   "private": true,
-  "devDependencies": {
-    "@types/googlemaps": "^3.26.17"
+  "dependencies": {
   },
   "engines": {
     "node": ">=5"

@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <widget id="widget.Glocation" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
-    <name>Glocation</name>
-    <description>Glocation helps to get the current location of the user</description>
+    <name>Geo location</name>
+    <description>Gets the current location of the user</description>
 
     <icon />
 
     <properties>
        <property key="latitudeAttribute" type="attribute" required="false" entityProperty="locationEntity">
-            <caption>latitude</caption>
+            <caption>Latitude</caption>
             <category>Data source</category>
-            <description>The geo-latitude coordinates of your location</description>
+            <description>The latitude specified in the location entity</description>
             <attributeTypes>
                 <attributeType name="String" />
             </attributeTypes>
         </property>
-        <property key="onchangemf" type="microflow" required="true">
-            <caption>Server microflow</caption>
-            <category>Send</category>
-            <description></description>
-            <returnType type="Void"/>
-        </property>
         <property key="longitudeAttribute" type="attribute" required="false" entityProperty="locationEntity">
-            <caption>longitude</caption>
+            <caption>Longitude</caption>
             <category>Data source</category>
-            <description>The geo-longitude coordinates of your location</description>
+            <description>The longitude specified in the location entity</description>
+            <attributeTypes>
+                <attributeType name="String"/>
+            </attributeTypes>
+        </property>
+         <property key="CityName" type="attribute" required="false" entityProperty="locationEntity">
+            <caption>Address</caption>
+            <category>Data source</category>
+            <description>The geo-location that is in the location entity</description>
             <attributeTypes>
                 <attributeType name="String"/>
             </attributeTypes>
         </property>
         <property key="locationEntity" type="entity" required="true">
-        <caption>Location Entity</caption>
+        <caption>Location entity</caption>
         <category>Data source</category>
         <description>Location</description>
         </property>
-        <property key="micro" type="microflow" required="false">
-            <caption> Send to Server</caption>
+        <property key="onchangemf" type="microflow" required="false">
+            <caption> Send to server</caption>
             <category>Behavior</category>
             <description>The microflow sends the geo-coordinates to the server</description>
             <returnType type="Boolean"/>
