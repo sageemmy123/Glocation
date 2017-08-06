@@ -5,7 +5,6 @@ import * as dojoClass from "dojo/dom-class";
 import * as dojoStyle from "dojo/dom-style";
 import * as dojoHtml from "dojo/html";
 import * as dom from "dojo/dom";
-import {} from "google.maps";
 import { GoogleMapsLoader } from "./dex";
 
      class Glocation extends WidgetBase {
@@ -15,6 +14,7 @@ import { GoogleMapsLoader } from "./dex";
          private latitudeAttribute: string;
          private CityName: string;
          private onchangemf: string;
+         private onchangemf2: string;
 
          // internal
          x: boolean;
@@ -27,15 +27,9 @@ import { GoogleMapsLoader } from "./dex";
 
          postCreate() {
             GoogleMapsLoader.load()
-           .then(() => {
-                 this.initialize();
-            });
+           .then(() => {});
             this.geoSuccess = this.geoSuccess.bind(this);
          }
-
-         initialize() {
-	     this.geocoder = new google.maps.Geocoder();
- }
 
          update(object: mendix.lib.MxObject, callback?: () => void) {
              this.contextObject = object;
@@ -148,6 +142,7 @@ import { GoogleMapsLoader } from "./dex";
                      object.set(this.longitudeAttribute, longitude);
                      this.commitItem(object);
                      this.executeMf(this.onchangemf, object.getGuid());
+                     this.executeMf(this.onchangemf2, object.getGuid());
                  },
                  entity: this.locationEntity,
                  error: (e) => {

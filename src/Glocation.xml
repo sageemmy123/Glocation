@@ -36,9 +36,15 @@
         <description>Location</description>
         </property>
         <property key="onchangemf" type="microflow" required="false">
-            <caption> Send to server</caption>
+            <caption> Send coordinates to server</caption>
             <category>Behavior</category>
             <description>The microflow sends the geo-coordinates to the server</description>
+            <returnType type="Boolean"/>
+        </property>
+        <property key="onchangemf2" type="microflow" required="false">
+            <caption> Send location to server</caption>
+            <category>Behavior</category>
+            <description>The microflow sends the geo-location to the server</description>
             <returnType type="Boolean"/>
         </property>
     </properties>
