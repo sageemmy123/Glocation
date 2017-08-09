@@ -3,7 +3,6 @@ import * as domConstruct from "dojo/dom-construct";
 import * as WidgetBase from "mxui/widget/_WidgetBase";
 import * as dojoClass from "dojo/dom-class";
 import * as dojoStyle from "dojo/dom-style";
-import * as dojoHtml from "dojo/html";
 import * as dom from "dojo/dom";
 import { GoogleMapsLoader } from "./GoogleMapsLoader";
 
@@ -14,19 +13,23 @@ class Glocation extends WidgetBase {
     private latitudeAttribute: string;
     private cityName: string;
     private onchangemf: string;
-    
+
 
     // internal
-  
-    private latitude: number;   
+
+    private latitude: number;
     private geocoder: any;
     private longitude: number;
     private locationEntity: string;
     private contextObject: mendix.lib.MxObject;
 
     postCreate() {
+        if(navigator.onLine){
         GoogleMapsLoader.load()
             .then(() => { });
+        } else {
+            mx.ui.error("Check your internet connection");
+        }
         this.geoSuccess = this.geoSuccess.bind(this);
     }
 
@@ -46,7 +49,6 @@ class Glocation extends WidgetBase {
 
     private updateRendering() {
         if (this.contextObject) {
-            this.html();
         } else {
             dojoStyle.set(this.domNode, "display", "block");
         }
@@ -62,28 +64,27 @@ class Glocation extends WidgetBase {
         }
     }
 
-    private html() {
-        domConstruct.empty(this.domNode);
-        domConstruct.create("div", {
-            InnerHTML: "&nbsp<span>hi</span>"
-        }, this.domNode);
-    }
-
-    getLocation() {
+    private getLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.geoSuccess);
+            navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     }
+    private geoError(){
+        mx.ui.error("Geocoder failed.");
+    }
 
-    geoSuccess(position: any) {
+    private geoSuccess(position: any) {
         const latitude = position.coords.latitude;
         const longit = position.coords.longitude;
+        if((latitude && longit == null) || longit == null || latitude == null){
+            alert("Error occured on the cordinates");
+        }
         this.codeLatLng(latitude, longit);
     }
 
-    codeLatLng(lat: any, lng: any) {
+    private codeLatLng(lat: any, lng: any) {
         const geocoder = new google.maps.Geocoder();
         const LatLng = new google.maps.LatLng(lat, lng);
         geocoder.geocode({ location: LatLng }, (results: any, status: any) => {
@@ -92,7 +93,7 @@ class Glocation extends WidgetBase {
                 if (results[1]) {
                     const address = results[0].formatted_address;
                     this.createItem(lat, lng, address);
-                    
+
                 } else {
                     window.alert("No results found");
                 }
@@ -102,20 +103,20 @@ class Glocation extends WidgetBase {
         });
     }
 
-    private executeMf(microflow: string, guid: string, callback?: (obj: mendix.lib.MxObject) => void) {
+    private executeMf(microflow: string, guid: string, callbck?: (obj: mendix.lib.MxObject) => void) {
         if (microflow && guid) {
             mx.ui.action(microflow, {
                 callback: (objects: mendix.lib.MxObject) => {
-                    if (callback && typeof callback === "function") {
-                        callback(objects);
+                    if (callbck && typeof callbck === "function") {
+                        callbck(objects);
                     }
                 },
                 error: (error) => {
-                    mx.ui.error("Error executing microflow " + microflow + " : " + error.message);
+                    alert("Error executing microflow " + microflow + " : " + error.message);
                 },
                 params: {
                     applyto: "selection",
-                    guids: [guid]
+                    guids: [ guid ]
                 }
             }, this);
         }
@@ -127,23 +128,26 @@ class Glocation extends WidgetBase {
                 object.set(this.cityName, City);
                 object.set(this.latitudeAttribute, latitude);
                 object.set(this.longitudeAttribute, longitude);
+                if (City == null || latitude == null || longitude ==null || (City && latitude && longitude) == null){
+                    alert("Error  occured on the specifications");
+                }
                 this.commitItem(object);
                 this.executeMf(this.onchangemf, object.getGuid());
                 // this.executeMf(this.onchangemf2, object.getGuid());
             },
             entity: this.locationEntity,
             error: (exception) => {
-                window.alert("an error occured: " + exception);
+                alert("an error occured: " + exception);
             }
         });
     }
     commitItem(obj: mendix.lib.MxObject) {
         mx.data.commit({
             callback: () => {
-                window.alert("Object committed");
+                alert("Object committed");
             },
             error: (exception) => {
-                window.alert("Error occurred attempting to commit: " + exception);
+                alert("Error occurred attempting to commit: " + exception);
             },
             mxobj: obj
         });

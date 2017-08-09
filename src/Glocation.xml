@@ -10,7 +10,13 @@
                 <category>Data source</category>
                 <description>Location</description>
             </property>
-            <property key="latitudeAttribute" type="attribute" required="false" entityProperty="locationEntity">
+            <property key="onchangemf" type="microflow" required="true">
+                <caption> Send coordinates to server</caption>
+                <category>Appearance</category>
+                <description>The microflow sends the geo-coordinates to the server</description>
+                <returnType type="Boolean"/>
+            </property>
+            <property key="latitudeAttribute" type="attribute" required="true" entityProperty="locationEntity">
                 <caption>Latitude</caption>
                 <category>Data source</category>
                 <description>The latitude specified in the location entity</description>
@@ -29,16 +35,10 @@
             <property key="cityName" type="attribute" required="false" entityProperty="locationEntity">
                 <caption>Address</caption>
                 <category>Data source</category>
-                <description>The geo-location that is in the location entity</description>
+                <description>The address that is in the location entity</description>
                 <attributeTypes>
                     <attributeType name="String"/>
                 </attributeTypes>
-            </property>
-            <property key="onchangemf" type="microflow" required="false">
-                <caption> Send coordinates to server</caption>
-                <category>Behavior</category>
-                <description>The microflow sends the geo-coordinates to the server</description>
-                <returnType type="Boolean"/>
             </property>
         </properties>
 </widget>

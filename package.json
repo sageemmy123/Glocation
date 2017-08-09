@@ -1,9 +1,9 @@
 {
-  "name": "Geolocation",
+  "name": "Glocation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Tracks the current loction of the user",
   "license": "",
-  "author": "",
+  "author": "David and Emma",
   "private": true,
   "dependencies": {
   },

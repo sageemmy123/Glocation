@@ -8,7 +8,7 @@ export class GoogleMapsLoader {
 
         GoogleMapsLoader.promise = new Promise((resolve) => {
 
-            window[" __onGoogleMapsLoaded"] = (ev: any) => {
+            window.__onGoogleMapsLoaded = () => {
             console.log("google maps api loaded");
             resolve(window.google.maps);
             };
