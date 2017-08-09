@@ -10,27 +10,21 @@ module.exports = {
         libraryTarget: "umd"
     },
     resolve: {
-        extensions: [ ".ts", ".js", ".json" ], // TODO remove .js and .json...supported by default
+        extensions: [ ".ts" ], 
     },
     module: {
         rules: [
             { test: /\.ts$/, use: "ts-loader" },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract({ // not required since there is no css
-                fallback: "style-loader",
-                use: "css-loader"
-            }) }
         ]
     },
     devtool: "source-map",
     externals: [ /^mxui\/|^mendix\/|^dojo\/|^dijit\// ],
     plugins: [
         new CopyWebpackPlugin([
-            { from: "src/**/*.js" },// js can be removed
             { from: "src/**/*.xml" }
         ], {
             copyUnmodified: true
         }),
-        //new ExtractTextPlugin("./src/org/flockofbirds/widget/cropimage/ui/CropImage.css"),
         new webpack.LoaderOptionsPlugin({
             debug: true
         })
