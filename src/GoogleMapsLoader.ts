@@ -21,5 +21,5 @@ export class GoogleMapsLoader {
     }
 
     return GoogleMapsLoader.promise;
-  } 
+  }
 }
