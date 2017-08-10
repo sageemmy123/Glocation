@@ -4,7 +4,9 @@
 ## Features
 - Show current location of the user based on address.
 - Show current location of the user based on coordinates.
-- Data sources Context, Microflow.
+- Data sources<br /> 
+    Context<br /> 
+    Microflow
 
 ## Dependencies
 Mendix 6.10.7 and higher versions of mendix
@@ -20,6 +22,7 @@ Contexts are Offline capable with Mendix data, however the widget works online a
 
 ## Known bugs
 No known limitations at the time of development.
+
 
 ## Development
  Prerequisite: install git, node package manager, webpack CLI, grunt CLI.<br />

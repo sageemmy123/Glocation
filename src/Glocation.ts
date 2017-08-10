@@ -14,7 +14,6 @@ class Glocation extends WidgetBase {
     private cityName: string;
     private onchangemf: string;
 
-
     // internal
 
     private latitude: number;
@@ -24,9 +23,9 @@ class Glocation extends WidgetBase {
     private contextObject: mendix.lib.MxObject;
 
     postCreate() {
-        if(navigator.onLine){
-        GoogleMapsLoader.load()
-            .then(() => { });
+        if (navigator.onLine) {
+            GoogleMapsLoader.load()
+                .then(() => {});
         } else {
             mx.ui.error("Check your internet connection");
         }
@@ -71,14 +70,14 @@ class Glocation extends WidgetBase {
             alert("Geolocation is not supported by this browser.");
         }
     }
-    private geoError(){
+    private geoError() {
         mx.ui.error("Geocoder failed.");
     }
 
     private geoSuccess(position: any) {
         const latitude = position.coords.latitude;
         const longit = position.coords.longitude;
-        if((latitude && longit == null) || longit == null || latitude == null){
+        if ((latitude && longit == null) || longit == null || latitude == null) {
             alert("Error occured on the cordinates");
         }
         this.codeLatLng(latitude, longit);
@@ -116,7 +115,7 @@ class Glocation extends WidgetBase {
                 },
                 params: {
                     applyto: "selection",
-                    guids: [ guid ]
+                    guids: [guid]
                 }
             }, this);
         }
@@ -128,7 +127,7 @@ class Glocation extends WidgetBase {
                 object.set(this.cityName, City);
                 object.set(this.latitudeAttribute, latitude);
                 object.set(this.longitudeAttribute, longitude);
-                if (City == null || latitude == null || longitude ==null || (City && latitude && longitude) == null){
+                if (City == null || latitude == null || longitude == null || (City && latitude && longitude) == null) {
                     alert("Error  occured on the specifications");
                 }
                 this.commitItem(object);
