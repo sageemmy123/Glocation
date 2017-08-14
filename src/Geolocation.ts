@@ -18,135 +18,133 @@ interface Coordinate {
 
 class Geolocation extends WidgetBase {
 
-         // from modeler
-         private longitudeAttribute: string;
-         private latitudeAttribute: string;
-         private cityName: string;
-         private onchangemf: string;
+    // from modeler
+    private longitudeAttribute: string;
+    private latitudeAttribute: string;
+    private cityName: string;
+    private onChangeMicroflow: string;
 
-         // internal
-         private latitude: number;
-         private geocoder: any;
-         private longitude: number;
-         private locationEntity: string;
-         private contextObject: mendix.lib.MxObject;
+    // internal
+    private latitude: number;
+    private city: string;
+    private longitude: number;
+    private locationEntity: string;
+    private contextObject: mendix.lib.MxObject;
 
-         postCreate() {
-            this.geoSuccess = this.geoSuccess.bind(this);
-         }
+    postCreate() {
+        this.geoSuccess = this.geoSuccess.bind(this);
+    }
 
-         update(object: mendix.lib.MxObject, callback?: () => void) {
-             this.contextObject = object;
-             this.resetSubscriptions();
-             if (navigator.onLine) {
-                 GoogleMapsLoader.load()
-                     .then(() => { return; });
-             } else {
-                 mx.ui.error("Please Check your internet connection");
-             }
-             if (callback) {
-                 callback();
-             }
-             this.updateRendering();
-         }
+    update(object: mendix.lib.MxObject, callback?: () => void) {
+        this.contextObject = object;
 
-         uninitialize(): boolean {
-             return true;
-         }
+        if (navigator.onLine) {
+            GoogleMapsLoader.load()
+                .then(() => { return; });
+        } else {
+            mx.ui.error("Please Check your internet connection");
+        }
+        this.resetSubscriptions();
+        if (callback) {
+            callback();
+        }
+        this.updateRendering();
 
-         private updateRendering() {
-             if (this.contextObject) {
-                 this.getLocation();
-              } else {
-                 dojoStyle.set(this.domNode, "display", "block");
-             }
-         }
+    }
 
-         private resetSubscriptions() {
-             this.unsubscribeAll();
-             if (this.contextObject) {
-                 this.subscribe({
-                     callback: () => this.updateRendering(),
-                     guid: this.contextObject.getGuid()
-                 });
-             }
-         }
+    uninitialize(): boolean {
+        return true;
+    }
 
-         private getLocation() {
-             if (navigator.geolocation) {
-                 navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
-             } else {
-                 mx.ui.error("Geolocation is not supported by this browser.");
-             }
-         }
-         private geoError() {
-          mx.ui.error("Geocoder failed.");
-       }
+    private updateRendering() {
+        if (this.contextObject) {
+            this.getLocation();
+        } else {
+            dojoStyle.set(this.domNode, "display", "block");
+        }
+    }
 
-         private geoSuccess(position: PositionProp) {
-             const latitude = position.coords.latitude;
-             const longit = position.coords.longitude;
-             if ((latitude && longit == null) || longit == null || latitude == null) {
-                 alert("Error occured on the coordinates");
-             }
-             this.codeLatLng(latitude, longit);
-         }
+    private resetSubscriptions() {
+        this.unsubscribeAll();
+        if (this.contextObject) {
+            this.subscribe({
+                callback: (() => {
+                    this.updateRendering();
+                }),
+                guid: this.contextObject.getGuid()
+            });
+        }
+    }
 
-        private codeLatLng(lat: number, lng: number) {
-             const geocoder = new google.maps.Geocoder();
-             const LatLng = new google.maps.LatLng(lat, lng);
-             geocoder.geocode({ location: LatLng }, (results: any, status: any) => {
-                 if (status === google.maps.GeocoderStatus.OK) {
-                     console.log(results);
-                     if (results[1]) {
-                         const address = results[0].formatted_address;
-                         this.createItem(lat, lng, address);
-                     } else {
-                         mx.ui.error("No results found");
-                     }
-                 } else {
-                    mx.ui.error("Geocoder failed due to: " + status);
-                 }
-             });
-         }
+    private getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
+        } else {
+            mx.ui.error("Geolocation is not supported by this browser.");
+        }
+    }
+    private geoError() {
+        mx.ui.error("Geocoder failed.");
+    }
 
-         private executeMf(microflow: string, guid: string, callbck?: (mxobj: mendix.lib.MxObject) => void ) {
-             if (microflow && guid) {
-                 mx.ui.action(microflow, {
-                     callback: (objects: mendix.lib.MxObject) => {
-                         if (callbck && typeof callbck === "function") {
-                             callbck(objects);
-                         }
-                     },
-                     error: (error) => {
-                         alert("Error executing microflow " + microflow + " : " + error.message);
-                     },
-                     params: {
-                         applyto: "selection",
-                         guids: [ guid ]
-                     }
-                 }, this);
-             }
-         }
+    private geoSuccess(position: PositionProp) {
+        const latitude = position.coords.latitude;
+        const longit = position.coords.longitude;
+        if ((latitude && longit == null) || longit == null || latitude == null) {
+            alert("Error occured on the coordinates");
+        }
+        this.geoLocate(latitude, longit);
+    }
 
-         createItem(latitude: any, longitude: any, City: string) {
-             mx.data.create({
-                 callback: object => {
-                     object.set(this.cityName, City);
-                     object.set(this.latitudeAttribute, latitude);
-                     object.set(this.longitudeAttribute, longitude);
-                     if (City == null || latitude == null || longitude == null || (City && latitude && longitude) == null) {
-                         alert("Error occured on the specifications");
-                     }
-                     this.executeMf(this.onchangemf, object.getGuid());
-                 },
-                 entity: this.locationEntity,
-                 error: (e) => {
-                     alert("an error occured: " + e);
-                 }
-             });
-         }
-     }
+    private geoLocate(lat: number, lng: number) {
+        const geocoder = new google.maps.Geocoder();
+        const LatLng = new google.maps.LatLng(lat, lng);
+        geocoder.geocode({ location: LatLng }, (results: any, status: any) => {
+            if (status === google.maps.GeocoderStatus.OK) {
+                console.log(results);
+                if (results[1]) {
+                    const address = results[0].formatted_address;
+                    this.createData(lat, lng, address);
+                } else {
+                    mx.ui.error("No results found");
+                }
+            } else {
+                mx.ui.error("Geocoder failed due to: " + status);
+            }
+        });
+    }
+
+    private executeMicroflow(microflow: string, guid: string, callbck?: (mxobj: mendix.lib.MxObject) => void) {
+        if (microflow && guid) {
+            mx.ui.action(microflow, {
+                callback: (objects: mendix.lib.MxObject) => {
+                    if (callbck && typeof callbck === "function") {
+                        callbck(objects);
+                    }
+                },
+                error: (error) => {
+                    alert("Error executing microflow " + microflow + " : " + error.message);
+                },
+                params: {
+                    applyto: "selection",
+                    guids: [ guid ]
+                }
+            }, this);
+        }
+    }
+
+    createData(latitude: any, longitude: any, CityN: string) {
+
+        this.contextObject.set(this.cityName, CityN);
+        this.contextObject.set(this.latitudeAttribute, latitude);
+        this.contextObject.set(this.longitudeAttribute, longitude);
+        if (CityN == null || latitude == null || longitude == null || (CityN && latitude && longitude) == null) {
+            alert("Error occured on the specifications");
+
+        }
+        this.executeMicroflow(this.onChangeMicroflow, this.contextObject.getGuid());
+    }
+}
 
 // tslint:disable-next-line:only-arrow-functions
 dojoDeclare("widget.Geolocation", [ WidgetBase ], function(Source: any) {
