@@ -26,5 +26,10 @@ No known limitations at the time of development.
 
 ## Development
  Prerequisite: install git, node package manager, webpack CLI, grunt CLI.<br />
+ You can do this by doing
+ <pre><code>npm install</code></pre>
  To contribute, fork and clone from the github remote repository<br />
- git clone https://github.com/Genza999/Glocation.git
+ git clone 
+ <pre><code>https://github.com/Genza999/Glocation.git
+</code></pre>
+
