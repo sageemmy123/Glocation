@@ -7,16 +7,16 @@ import * as dom from "dojo/dom";
 import { GoogleMapsLoader } from "./GoogleMapsLoader";
 
 interface PositionProp {
-    coords: Coordinates;
+    coords: Coordinate;
     timestamp: number;
 }
 
-interface Coordinates {
+interface Coordinate {
     latitude: number;
     longitude: number;
 }
 
-class Glocation extends WidgetBase {
+class Geolocation extends WidgetBase {
 
          // from modeler
          private longitudeAttribute: string;
@@ -40,7 +40,7 @@ class Glocation extends WidgetBase {
              this.resetSubscriptions();
              if (navigator.onLine) {
                  GoogleMapsLoader.load()
-                     .then(() => {});
+                     .then(() => { return; });
              } else {
                  mx.ui.error("Please Check your internet connection");
              }
@@ -149,7 +149,7 @@ class Glocation extends WidgetBase {
      }
 
 // tslint:disable-next-line:only-arrow-functions
-dojoDeclare("widget.Glocation", [ WidgetBase ], function(Source: any) {
+dojoDeclare("widget.Geolocation", [ WidgetBase ], function(Source: any) {
     const result: any = {};
     for (const i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i)) {
@@ -157,4 +157,4 @@ dojoDeclare("widget.Glocation", [ WidgetBase ], function(Source: any) {
         }
     }
     return result;
-}(Glocation));
+}(Geolocation));

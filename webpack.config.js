@@ -3,10 +3,10 @@ var CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: "./src/Glocation.ts",
+    entry: "./src/Geolocation.ts",
     output: {
         path: __dirname + "/dist/tmp",
-        filename: "src/widget/Glocation.js",
+        filename: "src/widget/Geolocation.js",
         libraryTarget: "umd"
     },
     resolve: {

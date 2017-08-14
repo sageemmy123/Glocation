@@ -1,5 +1,6 @@
 {
-  "name": "Glocation",
+  "name": "geolocation",
+  "widget-name": "Geolocation",
   "version": "1.0.0",
   "description": "Tracks the current loction of the user",
   "license": "",
