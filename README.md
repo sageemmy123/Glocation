@@ -11,6 +11,9 @@
 ## Dependencies
 Mendix 6.10.7 and higher versions of mendix
 
+## Demo project
+<a href= "https://geolocation101.mxapps.io"> https://geolocation101.mxapps.io </a>
+
 ## Typical usage scenario
 - Run the widget and you will have to choose what you prefer the widget to display.<br />
 You either choose the option for the  widget to show you your current geo-coordinates.<br />
