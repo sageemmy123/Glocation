@@ -3,63 +3,61 @@ import * as domConstruct from "dojo/dom-construct";
 import * as WidgetBase from "mxui/widget/_WidgetBase";
 import * as dojoClass from "dojo/dom-class";
 import * as dojoStyle from "dojo/dom-style";
-import * as dojoHtml from "dojo/html";
 import * as dom from "dojo/dom";
-import { GoogleMapsLoader } from "./dex";
+import { GoogleMapsLoader } from "./GoogleMapsLoader";
 
-     class Glocation extends WidgetBase {
+interface PositionProp {
+    coords: Coordinate;
+    timestamp: number;
+}
+
+interface Coordinate {
+    latitude: number;
+    longitude: number;
+}
+
+class Geolocation extends WidgetBase {
 
          // from modeler
          private longitudeAttribute: string;
          private latitudeAttribute: string;
-         private CityName: string;
+         private cityName: string;
          private onchangemf: string;
-         private onchangemf2: string;
 
          // internal
-         x: boolean;
          private latitude: number;
-         geo: any;
          private geocoder: any;
          private longitude: number;
          private locationEntity: string;
          private contextObject: mendix.lib.MxObject;
 
          postCreate() {
-            GoogleMapsLoader.load()
-           .then(() => {});
             this.geoSuccess = this.geoSuccess.bind(this);
          }
 
          update(object: mendix.lib.MxObject, callback?: () => void) {
              this.contextObject = object;
              this.resetSubscriptions();
-             this.updateRendering();
-             this.getLocation();
+             if (navigator.onLine) {
+                 GoogleMapsLoader.load()
+                     .then(() => { return; });
+             } else {
+                 mx.ui.error("Please Check your internet connection");
+             }
              if (callback) {
                  callback();
              }
+             this.updateRendering();
          }
 
          uninitialize(): boolean {
              return true;
          }
-//         ngOnInit() {
-//         this.x = false;
-//         while (this.x === false) {
-//         if (typeof google !== "undefined") {
-//         console.log("Hell Yeah");
-//         this.getLocation();
-//         this.x = true;
-//     } else{}
-// }
-//         }
 
          private updateRendering() {
              if (this.contextObject) {
-                 //this.ngOnInit();
-                 this.html();
-             } else {
+                 this.getLocation();
+              } else {
                  dojoStyle.set(this.domNode, "display", "block");
              }
          }
@@ -74,61 +72,58 @@ import { GoogleMapsLoader } from "./dex";
              }
          }
 
-         private html() {
-             domConstruct.empty(this.domNode);
-             domConstruct.create("div", {
-                 InnerHTML: "&nbsp<span>hi</span>"
-             }, this.domNode);
-         }
-
-         getLocation() {
+         private getLocation() {
              if (navigator.geolocation) {
-                 navigator.geolocation.getCurrentPosition(this.geoSuccess);
+                 navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
              } else {
-                 alert("Geolocation is not supported by this browser.");
+                 mx.ui.error("Geolocation is not supported by this browser.");
              }
          }
+         private geoError() {
+          mx.ui.error("Geocoder failed.");
+       }
 
-         geoSuccess(position: any) {
+         private geoSuccess(position: PositionProp) {
              const latitude = position.coords.latitude;
              const longit = position.coords.longitude;
+             if ((latitude && longit == null) || longit == null || latitude == null) {
+                 alert("Error occured on the coordinates");
+             }
              this.codeLatLng(latitude, longit);
          }
 
-         codeLatLng(lat: any, lng: any) {
+        private codeLatLng(lat: number, lng: number) {
              const geocoder = new google.maps.Geocoder();
              const LatLng = new google.maps.LatLng(lat, lng);
              geocoder.geocode({ location: LatLng }, (results: any, status: any) => {
                  if (status === google.maps.GeocoderStatus.OK) {
                      console.log(results);
                      if (results[1]) {
-                         //formatted address
                          const address = results[0].formatted_address;
                          this.createItem(lat, lng, address);
-                         //alert("address = " + address);
                      } else {
-                         alert("No results found");
+                         mx.ui.error("No results found");
                      }
                  } else {
-                     alert("Geocoder failed due to: " + status);
+                    mx.ui.error("Geocoder failed due to: " + status);
                  }
              });
          }
 
-         private executeMf(microflow: string, guid: string, cb?: (obj: mendix.lib.MxObject) => void) {
+         private executeMf(microflow: string, guid: string, callbck?: (mxobj: mendix.lib.MxObject) => void ) {
              if (microflow && guid) {
                  mx.ui.action(microflow, {
-                     callback: (objs: mendix.lib.MxObject) => {
-                         if (cb && typeof cb === "function") {
-                             cb(objs);
+                     callback: (objects: mendix.lib.MxObject) => {
+                         if (callbck && typeof callbck === "function") {
+                             callbck(objects);
                          }
                      },
                      error: (error) => {
-                         mx.ui.error("Error executing microflow " + microflow + " : " + error.message);
+                         alert("Error executing microflow " + microflow + " : " + error.message);
                      },
                      params: {
                          applyto: "selection",
-                         guids: [guid]
+                         guids: [ guid ]
                      }
                  }, this);
              }
@@ -137,34 +132,24 @@ import { GoogleMapsLoader } from "./dex";
          createItem(latitude: any, longitude: any, City: string) {
              mx.data.create({
                  callback: object => {
-                     object.set(this.CityName, City);
+                     object.set(this.cityName, City);
                      object.set(this.latitudeAttribute, latitude);
                      object.set(this.longitudeAttribute, longitude);
-                     this.commitItem(object);
+                     if (City == null || latitude == null || longitude == null || (City && latitude && longitude) == null) {
+                         alert("Error occured on the specifications");
+                     }
                      this.executeMf(this.onchangemf, object.getGuid());
-                     this.executeMf(this.onchangemf2, object.getGuid());
                  },
                  entity: this.locationEntity,
                  error: (e) => {
-                     console.log("an error occured: " + e);
+                     alert("an error occured: " + e);
                  }
-             });
-         }
-         commitItem(obj: mendix.lib.MxObject) {
-             mx.data.commit({
-                 callback: () => {
-                     console.log("Object committed");
-                 },
-                 error: (e) => {
-                     console.log("Error occurred attempting to commit: " + e);
-                 },
-                 mxobj: obj
              });
          }
      }
 
 // tslint:disable-next-line:only-arrow-functions
-dojoDeclare("widget.Glocation", [ WidgetBase ], function(Source: any) {
+dojoDeclare("widget.Geolocation", [ WidgetBase ], function(Source: any) {
     const result: any = {};
     for (const i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i)) {
@@ -172,4 +157,4 @@ dojoDeclare("widget.Glocation", [ WidgetBase ], function(Source: any) {
         }
     }
     return result;
-}(Glocation));
+}(Geolocation));

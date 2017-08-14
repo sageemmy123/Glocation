@@ -1,4 +1,4 @@
-"use strict";
+"use-strict";
 var webpackConfig = require("./webpack.config");
 
 module.exports = function(grunt) {

@@ -1,15 +1,30 @@
 # Geo location
+- Track and display the current location of the user.
 
-## Description
--Widget is used to capture the users current geo-position and display it i.e he's/her latitudes and longitudes or geo-location and save them to the server.
+## Features
+- Show current location of the user based on address.
+- Show current location of the user based on coordinates.
+- Data sources<br /> 
+    Context<br /> 
+    Microflow
+
+## Dependencies
+Mendix 6.10.7 and higher versions of mendix
 
 ## Typical usage scenario
--Run the widget and you will have to choose what you prefer the widget to display i.e. either you choose the option for the  widget to show you your current geo-coordinates or you choose the option for the widget to show you your current geo-location. Once an option is chosen, the wigdet will then reload and display your geo-results.
+- Run the widget and you will have to choose what you prefer the widget to display.<br />
+You either choose the option for the  widget to show you your current geo-coordinates.<br />
+You can also choose the option for the widget to show you your current address.
+- Once an option is chosen, the wigdet will then reload and display your geo-results.
 
 ## Limitations
-No known limitations at the time of development.
+Contexts are Offline capable with Mendix data, however the widget works online and therefore needs internet connection
 
 ## Known bugs
 No known limitations at the time of development.
 
 
+## Development
+ Prerequisite: install git, node package manager, webpack CLI, grunt CLI.<br />
+ To contribute, fork and clone from the github remote repository<br />
+ git clone https://github.com/Genza999/Glocation.git

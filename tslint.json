@@ -5,8 +5,14 @@
   "extends": "tslint:latest",
   "rules": {
     "class-name": true,
-    "max-classes-per-file": [true, 5],
-    "max-line-length": [true, 300],
+    "max-classes-per-file": [
+      true,
+      5
+    ],
+    "max-line-length": [
+      true,
+      300
+    ],
     "comment-format": [
       true,
       "check-space"
